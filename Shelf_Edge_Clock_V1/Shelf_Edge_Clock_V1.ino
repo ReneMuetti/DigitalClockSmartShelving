@@ -30,10 +30,6 @@ FACEBOOK: https://www.facebook.com/diymachines/
 
 */
 
-
-
-
-
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
 #endif
@@ -45,11 +41,13 @@ DS3231_Simple Clock;
 DateTime MyDateAndTime;
 
 // Which pin on the Arduino is connected to the NeoPixels?
-#define LEDCLOCK_PIN    6
-#define LEDDOWNLIGHT_PIN    5
+#define LEDCLOCK_PIN 6
+#define LEDDOWNLIGHT_PIN 5
 
 // How many NeoPixels are attached to the Arduino?
-#define LEDCLOCK_COUNT 216
+#define LEDCLOCK_LIGHTS_PER_SEGMENT 9
+#define LEDCLOCK_SEGMENTS 32
+#define LEDCLOCK_COUNT LEDCLOCK_SEGMENTS * LEDCLOCK_LIGHTS_PER_SEGMENT
 #define LEDDOWNLIGHT_COUNT 12
 
 //(red * 65536) + (green * 256) + blue ->for 32-bit merged colour value so 16777215 equals white
@@ -57,6 +55,9 @@ DateTime MyDateAndTime;
 // this hex method is the same as html colour codes just with "0x" instead of "#" in front
 uint32_t clockMinuteColour = 0x800000; // pure red 
 uint32_t clockHourColour = 0x008000;   // pure green
+uint8_t colorModifyFactor = 20;        // Color change factor
+
+uint8_t lastHour = -1;
 
 int clockFaceBrightness = 0;
 
@@ -176,8 +177,19 @@ void readTheTime(){
 
 void displayTheTime(){
 
-  stripClock.clear(); //clear the clock face 
-
+  stripClock.clear(); //clear the clock face
+ 
+  if ( lastHour < 0 ) {
+   lastHour = MyDateAndTime.Hour;
+  }
+  else {
+   // create a new color for hours and minutes every hour on the hour
+   if (lastHour != MyDateAndTime.Hour) {
+    lastHour = MyDateAndTime.Hour;
+    clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
+    clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
+   }
+  }
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
@@ -217,6 +229,22 @@ void displayTheTime(){
 
   }
 
+// Function to generate the following color
+uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
+  uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
+  uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
+  uint8_t blue = inputColor & 0xFF;           // Extract the blue value
+
+  // Calculate the "following" color
+  uint8_t nextRed = (red + factor) % 256;
+  uint8_t nextGreen = (green + factor) % 256;
+  uint8_t nextBlue = (blue + factor) % 256;
+
+  // Build back the color value
+  uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
+  
+  return nextColor;
+}
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
     switch (digitToDisplay){
