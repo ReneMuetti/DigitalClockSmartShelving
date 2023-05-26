@@ -142,9 +142,10 @@ void loop() {
   Serial.print("Average light sensor value = ");
   Serial.println(lightSensorValue);
 
-
+  // Minimum threshold if the numbers of the clock should not be off at night
+  int minimalLightSensorValue = 10;
   //set the brightness based on ambiant light levels
-  clockFaceBrightness = map(lightSensorValue,50, 1000, 200, 1); 
+  clockFaceBrightness = map(lightSensorValue,50, 1000, 200, minimalLightSensorValue); 
   stripClock.setBrightness(clockFaceBrightness); // Set brightness value of the LEDs
   Serial.print("Mapped brightness value = ");
   Serial.println(clockFaceBrightness);
