@@ -16,7 +16,6 @@ Before you install this code you need to set the time on your DS3231. Once you h
 
 ==========
 
-
  * SAY THANKS:
 
 Buy me a coffee to say thanks: https://ko-fi.com/diymachines
@@ -50,7 +49,7 @@ DateTime MyDateAndTime;
 #define LEDCLOCK_COUNT LEDCLOCK_SEGMENTS * LEDCLOCK_LIGHTS_PER_SEGMENT
 #define LEDDOWNLIGHT_COUNT 12
 
-//(red * 65536) + (green * 256) + blue ->for 32-bit merged colour value so 16777215 equals white
+// (red * 65536) + (green * 256) + blue ->for 32-bit merged colour value so 16777215 equals white
 // or 3 hex byte 00 -> ff for RGB eg 0x123456 for red=12(hex) green=34(hex), and green=56(hex) 
 // this hex method is the same as html colour codes just with "0x" instead of "#" in front
 uint32_t clockMinuteColour = 0x800000; // pure red 
@@ -247,38 +246,27 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
-    switch (digitToDisplay){
-    case 0:
-    digitZero(offsetBy,colourToUse);
-      break;
-    case 1:
-      digitOne(offsetBy,colourToUse);
-      break;
-    case 2:
-    digitTwo(offsetBy,colourToUse);
-      break;
-    case 3:
-    digitThree(offsetBy,colourToUse);
-      break;
-    case 4:
-    digitFour(offsetBy,colourToUse);
-      break;
-    case 5:
-    digitFive(offsetBy,colourToUse);
-      break;
-    case 6:
-    digitSix(offsetBy,colourToUse);
-      break;
-    case 7:
-    digitSeven(offsetBy,colourToUse);
-      break;
-    case 8:
-    digitEight(offsetBy,colourToUse);
-      break;
-    case 9:
-    digitNine(offsetBy,colourToUse);
-      break;
-    default:
-     break;
+  switch (digitToDisplay){
+    case 0: digitZero(offsetBy,colourToUse);
+            break;
+    case 1: digitOne(offsetBy,colourToUse);
+            break;
+    case 2: digitTwo(offsetBy,colourToUse);
+            break;
+    case 3: digitThree(offsetBy,colourToUse);
+            break;
+    case 4: digitFour(offsetBy,colourToUse);
+            break;
+    case 5: digitFive(offsetBy,colourToUse);
+            break;
+    case 6: digitSix(offsetBy,colourToUse);
+            break;
+    case 7: digitSeven(offsetBy,colourToUse);
+            break;
+    case 8: digitEight(offsetBy,colourToUse);
+            break;
+    case 9: digitNine(offsetBy,colourToUse);
+            break;
+    default: break;
   }
 }
