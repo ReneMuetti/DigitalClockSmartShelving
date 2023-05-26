@@ -113,9 +113,6 @@ void loop() {
   //display the time on the LEDs
   displayTheTime();
 
-
-
-
   //Record a reading from the light sensor and add it to the array
   readings[readIndex] = analogRead(A0); //get an average light level from previouse set of samples
   Serial.print("Light sensor value added to array = ");
@@ -167,12 +164,12 @@ void readTheTime(){
   
   // And use it
   Serial.println("");
-  Serial.print("Time is: ");   Serial.print(MyDateAndTime.Hour);
-  Serial.print(":"); Serial.print(MyDateAndTime.Minute);
-  Serial.print(":"); Serial.println(MyDateAndTime.Second);
+  Serial.print("Time is: ");     Serial.print(MyDateAndTime.Hour);
+  Serial.print(":");             Serial.print(MyDateAndTime.Minute);
+  Serial.print(":");             Serial.println(MyDateAndTime.Second);
   Serial.print("Date is: 20");   Serial.print(MyDateAndTime.Year);
-  Serial.print(":");  Serial.print(MyDateAndTime.Month);
-  Serial.print(":");    Serial.println(MyDateAndTime.Day);
+  Serial.print(":");             Serial.print(MyDateAndTime.Month);
+  Serial.print(":");             Serial.println(MyDateAndTime.Day);
 }
 
 void displayTheTime(){
@@ -220,14 +217,13 @@ void displayTheTime(){
 //    secondHourDigit = 12;
 //  }
  
- if (secondHourDigit > 12){
+  if (secondHourDigit > 12){
     secondHourDigit = secondHourDigit - 12;
   }
-    if (secondHourDigit > 9){
-      stripClock.fill(clockHourColour,189, 18); 
-    }
-
+  if (secondHourDigit > 9){
+    stripClock.fill(clockHourColour,189, 18); 
   }
+}
 
 // Function to generate the following color
 uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
