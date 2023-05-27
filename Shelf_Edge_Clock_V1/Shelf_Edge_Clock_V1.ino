@@ -259,7 +259,7 @@ float rgbToHue(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 // Convert HSV hue to RGB color
-void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
+uint32_t hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
   hue /= 60; // Scale the hue to the range 0-6
 
   int sector = floor(hue);
@@ -301,6 +301,8 @@ void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
       blue = 255 * q;
       break;
   }
+  
+  return (red << 16) | (green << 8) | blue;
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
