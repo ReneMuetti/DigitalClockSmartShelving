@@ -102,14 +102,14 @@ void loop() {
   //read the time
   readTheTime();
   
-  unsigned long currentTime = millis();
+  //unsigned long currentTime = millis();
  
   // Check if the time delay has expired since the last color update.
-  if (currentTime - lastColorUpdate >= colorUpdateDelay) {
-    clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
-    clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
-    lastColorUpdate = currentTime;
-  }
+  //if (currentTime - lastColorUpdate >= colorUpdateDelay) {
+    //clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
+    //clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
+    //lastColorUpdate = currentTime;
+  //}
 
   //display the time on the LEDs
   displayTheTime();
@@ -176,6 +176,9 @@ void displayTheTime(){
 
   stripClock.clear(); //clear the clock face
   
+  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
+  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
+  
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
   
@@ -211,6 +214,37 @@ void displayTheTime(){
 }
 
 // Function to generate the following color
+uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* usingFor) {
+  Serial.println("");
+  Serial.print("Color is using for: ");  Serial.println(usingFor);
+  Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
+
+  uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
+  uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
+  uint8_t blue = inputColor & 0xFF;           // Extract the blue value
+
+  Serial.print("RGB-Values: ");
+    Serial.print(red);
+    Serial.print(", "); Serial.print(green);
+    Serial.print(", "); Serial.println(blue);
+  
+  // Add the shift value to the color values
+  uint8_t newRed = (red + shiftAmount) % 256;
+  uint8_t newGreen = (green + shiftAmount) % 256;
+  uint8_t newBlue = (blue + shiftAmount) % 256;
+
+  Serial.print("RGB-Values: ");
+    Serial.print(newRed);
+    Serial.print(", "); Serial.print(newGreen);
+    Serial.print(", "); Serial.println(newBlue);
+
+  // Create the new color in uint32_t format
+  uint32_t newColor = (newRed << 16) | (newGreen << 8) | newBlue;
+
+  return newColor;
+}
+
+/*
 uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char* usingFor) {
   Serial.println("");
   Serial.print("Color is using for: ");  Serial.println(usingFor);
@@ -240,6 +274,7 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
   
   return nextColor;
 }
+*/
 
 // Convert RGB color to HSV hue
 void rgbToHsv(uint8_t red, uint8_t green, uint8_t blue, float& hue, float& saturation, float& value) {
