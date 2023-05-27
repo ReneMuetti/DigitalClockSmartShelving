@@ -43,4 +43,5 @@ void digitEight(int offset, uint32_t colour){
 
 void digitNine(int offset, uint32_t colour){
     stripClock.fill(colour, (0 + offset), 45);
+    stripClock.setPixelColor(27 + offset, colour); // Switching on the lower horizontal segment
 }
