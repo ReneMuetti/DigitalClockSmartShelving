@@ -2,22 +2,15 @@
  * 3D printed smart shelving with a giant hidden digital clock in the front edges of the shelves - DIY Machines
 
 ==========
-
 More info and build instructions: https://www.youtube.com/watch?v=8E0SeycTzHw
-
 3D printed parts can be downloaded from here: https://www.thingiverse.com/thing:4207524
-
 You will need to install the Adafruit Neopixel library which can be found in the library manager.
-
 This project also uses the handy DS3231 Simple library:- https://github.com/sleemanj/DS3231_Simple   Please follow the instruction on installing this provided on the libraries page
-
 Before you install this code you need to set the time on your DS3231. Once you have connected it as shown in this project and have installed the DS3231_Simple library (see above) you
- to go to  'File' >> 'Examples' >> 'DS3231_Simple' >> 'Z1_TimeAndDate' >> 'SetDateTime' and follow the instructions in the example to set the date and time on your RTC
-
+to go to  'File' >> 'Examples' >> 'DS3231_Simple' >> 'Z1_TimeAndDate' >> 'SetDateTime' and follow the instructions in the example to set the date and time on your RTC
 ==========
 
  * SAY THANKS:
-
 Buy me a coffee to say thanks: https://ko-fi.com/diymachines
 Support us on Patreon: https://www.patreon.com/diymachines
 
@@ -26,7 +19,6 @@ SUBSCRIBE:
 
 INSTAGRAM: https://www.instagram.com/diy_machines/?hl=en
 FACEBOOK: https://www.facebook.com/diymachines/
-
 */
 
 #include <Adafruit_NeoPixel.h>
@@ -81,17 +73,13 @@ int readIndex = 0;              // the index of the current reading
 long total = 0;                  // the running total
 long average = 0;                // the average
 
-
-
 void setup() {
-
   Serial.begin(9600);
   Clock.begin();
 
   stripClock.begin();           // INITIALIZE NeoPixel stripClock object (REQUIRED)
   stripClock.show();            // Turn OFF all pixels ASAP
   stripClock.setBrightness(100); // Set inital BRIGHTNESS (max = 255)
- 
 
   stripDownlighter.begin();           // INITIALIZE NeoPixel stripClock object (REQUIRED)
   stripDownlighter.show();            // Turn OFF all pixels ASAP
@@ -102,7 +90,6 @@ void setup() {
   for (int thisReading = 0; thisReading < numReadings; thisReading++) {
     readings[thisReading] = 0;
   }
-  
 }
 
 void loop() {
@@ -176,24 +163,22 @@ void displayTheTime(){
   stripClock.clear(); //clear the clock face
  
   if ( lastHour < 0 ) {
-   lastHour = MyDateAndTime.Hour;
+    lastHour = MyDateAndTime.Hour;
   }
   else {
-   // create a new color for hours and minutes every hour on the hour
-   if (lastHour != MyDateAndTime.Hour) {
-    lastHour = MyDateAndTime.Hour;
-    clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
-    clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
-   }
+    // create a new color for hours and minutes every hour on the hour
+    if (lastHour != MyDateAndTime.Hour) {
+      lastHour = MyDateAndTime.Hour;
+      clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
+      clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
+    }
   }
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
-
   
   int secondMinuteDigit = floor(MyDateAndTime.Minute / 10); //work out the value for the second digit and then display it
   displayNumber(secondMinuteDigit, 63, clockMinuteColour);  
-
 
   int firstHourDigit = MyDateAndTime.Hour; //work out the value for the third digit and then display it
   if (firstHourDigit > 12){
@@ -201,9 +186,9 @@ void displayTheTime(){
   }
  
  // Comment out the following three lines if you want midnight to be shown as 12:00 instead of 0:00
-//  if (firstHourDigit == 0){
-//    firstHourDigit = 12;
-//  }
+ // if (firstHourDigit == 0){
+ //   firstHourDigit = 12;
+ // }
  
   firstHourDigit = firstHourDigit % 10;
   displayNumber(firstHourDigit, 126, clockHourColour);
