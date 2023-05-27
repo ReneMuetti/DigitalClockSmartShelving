@@ -176,8 +176,8 @@ void displayTheTime(){
 
   stripClock.clear(); //clear the clock face
   
-  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
-  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
+  clockHourColour = generateNewColor(clockHourColour, colorModifyFactor, "Hour");
+  clockMinuteColour = generateNewColor(clockMinuteColour, colorModifyFactor, "Minute");
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
