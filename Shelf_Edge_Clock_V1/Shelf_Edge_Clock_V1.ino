@@ -202,7 +202,7 @@ void displayTheTime(){
 }
 
 // Function to generate the following color
-uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, usingFor) {
+uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, string usingFor) {
   Serial.println("");
   Serial.print("Color is using for: ");  Serial.println(usingFor);
   Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
