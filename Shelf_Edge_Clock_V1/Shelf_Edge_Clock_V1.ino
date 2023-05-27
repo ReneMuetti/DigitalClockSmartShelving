@@ -230,6 +230,81 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
   return nextColor;
 }
 
+// Convert RGB color to HSV hue
+float rgbToHue(uint8_t red, uint8_t green, uint8_t blue) {
+  float r = red / 255.0;
+  float g = green / 255.0;
+  float b = blue / 255.0;
+
+  float maxVal = max(r, max(g, b));
+  float minVal = min(r, min(g, b));
+
+  if (maxVal == minVal) {
+    return 0; // Hue for gray tones is 0
+  }
+
+  float hue = 0;
+  if (maxVal == r) {
+    hue = (g - b) / (maxVal - minVal);
+  } else if (maxVal == g) {
+    hue = 2 + (b - r) / (maxVal - minVal);
+  } else {
+    hue = 4 + (r - g) / (maxVal - minVal);
+  }
+
+  hue *= 60; // Scale the hue to the range 0-360
+  if (hue < 0) {
+    hue += 360; // Correct negative color tones
+  }
+
+  return hue;
+}
+
+// Convert HSV hue to RGB color
+void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
+  hue /= 60; // Scale the hue to the range 0-6
+
+  int sector = floor(hue);
+  float fraction = hue - sector;
+
+  float p = 0;
+  float q = 1 - fraction;
+  float t = 1;
+
+  switch (sector) {
+    case 0:
+      red = 255;
+      green = 255 * fraction;
+      blue = 0;
+      break;
+    case 1:
+      red = 255 * q;
+      green = 255;
+      blue = 0;
+      break;
+    case 2:
+      red = 0;
+      green = 255;
+      blue = 255 * fraction;
+      break;
+    case 3:
+      red = 0;
+      green = 255 * q;
+      blue = 255;
+      break;
+    case 4:
+      red = 255 * fraction;
+      green = 0;
+      blue = 255;
+      break;
+    default:
+      red = 255;
+      green = 0;
+      blue = 255 * q;
+      break;
+  }
+}
+
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
   switch (digitToDisplay){
     case 0: digitZero(offsetBy,colourToUse);
