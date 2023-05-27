@@ -46,7 +46,7 @@ DateTime MyDateAndTime;
 // this hex method is the same as html colour codes just with "0x" instead of "#" in front
 uint32_t clockMinuteColour = 0x800000; // pure red 
 uint32_t clockHourColour = 0x008000;   // pure green
-uint8_t colorModifyFactor = 2;         // Color change factor
+uint8_t colorModifyFactor = 3;         // Color change factor
 
 uint8_t lastHour = -1;
 
