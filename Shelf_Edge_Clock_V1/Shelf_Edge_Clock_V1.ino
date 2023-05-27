@@ -212,12 +212,17 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
   uint8_t blue = inputColor & 0xFF;           // Extract the blue value
 
   // Shift the color values
-  uint8_t nextRed = (red + shiftAmount) % 256;
-  uint8_t nextGreen = (green + shiftAmount) % 256;
-  uint8_t nextBlue = (blue + shiftAmount) % 256;
+  //uint8_t nextRed = (red + shiftAmount) % 256;
+  //uint8_t nextGreen = (green + shiftAmount) % 256;
+  //uint8_t nextBlue = (blue + shiftAmount) % 256;
 
   // Build back the color value
-  uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
+  //uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
+  
+  // Calculate the next color by shifting the hue in a circular manner
+  uint16_t hue = rgbToHue(red, green, blue);   // Convert RGB to HSL and extract the hue
+  hue = (hue + shiftAmount) % 360;             // Shift the hue in a circular manner
+  uint32_t nextColor = hueToRgb(hue);          // Convert back to RGB
  
   Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
   Serial.println("");
