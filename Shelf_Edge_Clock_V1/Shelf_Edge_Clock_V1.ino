@@ -127,10 +127,9 @@ void loop() {
 
   //now work out the sum of all the values in the array
   int sumBrightness = 0;
-  for (int i=0; i < numReadings; i++)
-    {
-        sumBrightness += readings[i];
-    }
+  for (int i=0; i < numReadings; i++) {
+    sumBrightness += readings[i];
+  }
   Serial.print("Sum of the brightness array = ");
   Serial.println(sumBrightness);
 
@@ -227,6 +226,8 @@ void displayTheTime(){
 
 // Function to generate the following color
 uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
+  Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Factor: ");  Serial.println(factor);
+
   uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
   uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
   uint8_t blue = inputColor & 0xFF;           // Extract the blue value
@@ -238,6 +239,8 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
 
   // Build back the color value
   uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
+ 
+  Serial.print("Start-Color: ");  Serial.print(nextColor);  Serial.print(", Factor: ");  Serial.println(factor);
   
   return nextColor;
 }
