@@ -163,8 +163,8 @@ void displayTheTime(){
   stripClock.clear(); //clear the clock face
  
   // create a new color for hours and minutes
-  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
-  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
+  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
+  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
@@ -202,7 +202,9 @@ void displayTheTime(){
 }
 
 // Function to generate the following color
-uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount) {
+uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, usingFor) {
+  Serial.println("");
+  Serial.print("Color is using for: ");  Serial.println(usingFor);
   Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
 
   uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
@@ -218,6 +220,7 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount) {
   uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
  
   Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
+  Serial.println("");
   
   return nextColor;
 }
