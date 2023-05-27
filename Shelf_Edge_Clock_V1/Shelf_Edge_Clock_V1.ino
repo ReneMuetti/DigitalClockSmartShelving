@@ -46,7 +46,7 @@ DateTime MyDateAndTime;
 // this hex method is the same as html colour codes just with "0x" instead of "#" in front
 uint32_t clockMinuteColour = 0x800000; // pure red 
 uint32_t clockHourColour = 0x008000;   // pure green
-uint8_t colorModifyFactor = 20;        // Color change factor
+uint8_t colorModifyFactor = 2;         // Color change factor
 
 uint8_t lastHour = -1;
 
@@ -162,17 +162,9 @@ void displayTheTime(){
 
   stripClock.clear(); //clear the clock face
  
-  if ( lastHour < 0 ) {
-    lastHour = MyDateAndTime.Hour;
-  }
-  else {
-    // create a new color for hours and minutes every hour on the hour
-    if (lastHour != MyDateAndTime.Hour) {
-      lastHour = MyDateAndTime.Hour;
-      clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
-      clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
-    }
-  }
+  // create a new color for hours and minutes
+  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor);
+  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor);
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
@@ -210,22 +202,22 @@ void displayTheTime(){
 }
 
 // Function to generate the following color
-uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
-  Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Factor: ");  Serial.println(factor);
+uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount) {
+  Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
 
   uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
   uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
   uint8_t blue = inputColor & 0xFF;           // Extract the blue value
 
-  // Calculate the "following" color
-  uint8_t nextRed = (red + factor) % 256;
-  uint8_t nextGreen = (green + factor) % 256;
-  uint8_t nextBlue = (blue + factor) % 256;
+  // Shift the color values
+  uint8_t nextRed = (red + shiftAmount) % 256;
+  uint8_t nextGreen = (green + shiftAmount) % 256;
+  uint8_t nextBlue = (blue + shiftAmount) % 256;
 
   // Build back the color value
   uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
  
-  Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Factor: ");  Serial.println(factor);
+  Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
   
   return nextColor;
 }
