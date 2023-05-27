@@ -209,10 +209,13 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
   uint8_t blue = inputColor & 0xFF;           // Extract the blue value
   
   // Calculate the next color by shifting the hue in a circular manner
-  float hue = rgbToHue(red, green, blue);                  // Convert RGB to HSL and extract the hue
-  //hue = fmod(hue + shiftAmount, 360.0);                    // Shift the hue in a circular manner
-  hue = fmod(hue + static_cast<float>(shiftAmount), 360.0f);
-  uint32_t nextColor = hueToRgb(hue, red, green, blue);    // Convert back to RGB
+  float hue = rgbToHue(red, green, blue);    // Convert RGB to HSL and extract the hue
+  hue = fmod(hue + shiftAmount, 360.0);      // Shift the hue in a circular manner
+  
+  uint8_t nextRed, nextGreen, nextBlue;
+  hueToRgb(hue, nextRed, nextGreen, nextBlue);   // Convert back to RGB
+  
+  uint32_t nextColor = (nextRed << 16) | (nextGreen << 8) | nextBlue;    // Convert back to RGB
  
   Serial.print("current HUE: ");  Serial.println(hue);
   Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
@@ -251,7 +254,7 @@ float rgbToHue(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 // Convert HSV hue to RGB color
-uint32_t hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
+void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
   hue /= 60; // Scale the hue to the range 0-6
 
   int sector = floor(hue);
@@ -264,37 +267,35 @@ uint32_t hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
   switch (sector) {
     case 0:
       red = 255;
-      green = static_cast<uint8_t>(255 * fraction);
+      green = 255 * fraction;
       blue = 0;
       break;
     case 1:
-      red = static_cast<uint8_t>(255 * q);
+      red = 255 * q;
       green = 255;
       blue = 0;
       break;
     case 2:
       red = 0;
       green = 255;
-      blue = static_cast<uint8_t>(255 * fraction);
+      blue = 255 * fraction;
       break;
     case 3:
       red = 0;
-      green = static_cast<uint8_t>(255 * q);
+      green = 255 * q;
       blue = 255;
       break;
     case 4:
-      red = static_cast<uint8_t>(255 * fraction);
+      red = 255 * fraction;
       green = 0;
       blue = 255;
       break;
     default:
       red = 255;
       green = 0;
-      blue = static_cast<uint8_t>(255 * q);
+      blue = 255 * q;
       break;
   }
-  
-  return (red << 16) | (green << 8) | blue;
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
