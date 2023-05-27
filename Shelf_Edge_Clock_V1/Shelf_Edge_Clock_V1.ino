@@ -48,8 +48,6 @@ uint32_t clockMinuteColour = 0x800000; // pure red
 uint32_t clockHourColour = 0x008000;   // pure green
 uint8_t colorModifyFactor = 5;         // Color change factor
 
-uint8_t lastHour = -1;
-
 int clockFaceBrightness = 0;
 
 // Declare our NeoPixel objects:
@@ -185,7 +183,6 @@ void displayTheTime(){
   firstHourDigit = firstHourDigit % 10;
   displayNumber(firstHourDigit, 126, clockHourColour);
 
-
   int secondHourDigit = MyDateAndTime.Hour; //work out the value for the fourth digit and then display it
 
 // Comment out the following three lines if you want midnight to be shwon as 12:00 instead of 0:00
@@ -303,6 +300,12 @@ void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
       blue = 255 * q;
       break;
   }
+}
+
+uint32_t hueToRgb(float hue) {
+  uint8_t red, green, blue;
+  hueToRgb(hue, red, green, blue);
+  return (red << 16) | (green << 8) | blue;
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
