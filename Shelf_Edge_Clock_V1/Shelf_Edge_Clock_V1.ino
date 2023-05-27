@@ -224,6 +224,7 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
  
   Serial.print("current HUE: ");  Serial.println(hue);
   Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
+  Serial.println("---------------------------------------");
   
   return nextColor;
 }
@@ -267,41 +268,50 @@ void rgbToHsv(uint8_t red, uint8_t green, uint8_t blue, float& hue, float& satur
 
 // Convert HSV hue to RGB color
 uint32_t hsvToRgb(float hue, float saturation, float value) {
-  float c = value * saturation;
-  float x = c * (1 - abs(fmod(hue / 60.0, 2) - 1));
-  float m = value - c;
+  int h = int(hue) / 60;
+  float f = hue / 60 - h;
+  float p = value * (1 - saturation);
+  float q = value * (1 - f * saturation);
+  float t = value * (1 - (1 - f) * saturation);
 
   float r, g, b;
 
-  if (hue >= 0 && hue < 60) {
-    r = c;
-    g = x;
-    b = 0;
-  } else if (hue >= 60 && hue < 120) {
-    r = x;
-    g = c;
-    b = 0;
-  } else if (hue >= 120 && hue < 180) {
-    r = 0;
-    g = c;
-    b = x;
-  } else if (hue >= 180 && hue < 240) {
-    r = 0;
-    g = x;
-    b = c;
-  } else if (hue >= 240 && hue < 300) {
-    r = x;
-    g = 0;
-    b = c;
-  } else {
-    r = c;
-    g = 0;
-    b = x;
+  switch (h) {
+    case 0:
+      r = value;
+      g = t;
+      b = p;
+      break;
+    case 1:
+      r = q;
+      g = value;
+      b = p;
+      break;
+    case 2:
+      r = p;
+      g = value;
+      b = t;
+      break;
+    case 3:
+      r = p;
+      g = q;
+      b = value;
+      break;
+    case 4:
+      r = t;
+      g = p;
+      b = value;
+      break;
+    default:
+      r = value;
+      g = p;
+      b = q;
+      break;
   }
 
-  uint8_t red = (r + m) * 255;
-  uint8_t green = (g + m) * 255;
-  uint8_t blue = (b + m) * 255;
+  uint8_t red = r * 255;
+  uint8_t green = g * 255;
+  uint8_t blue = b * 255;
 
   return (red << 16) | (green << 8) | blue;
 }
