@@ -213,17 +213,24 @@ uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* 
     Serial.print(", "); Serial.println(blue);
   
   // Add the shift value to the color values
-  uint8_t newRed = (red + shiftAmount) % 256;
-  uint8_t newGreen = (green + shiftAmount) % 256;
-  uint8_t newBlue = (blue + shiftAmount) % 256;
+  if (red > 0 && blue == 0) {
+    red -= shiftAmount;
+    green += shiftAmount;
+  } else if (green > 0 && red == 0) {
+    green -= shiftAmount;
+    blue += shiftAmount;
+  } else if (blue > 0 && green == 0) {
+    red += shiftAmount;
+    blue -= shiftAmount;
+  }
 
   Serial.print("New-RGB-Values: ");
-    Serial.print(newRed);
-    Serial.print(", "); Serial.print(newGreen);
-    Serial.print(", "); Serial.println(newBlue);
+    Serial.print(red);
+    Serial.print(", "); Serial.print(green);
+    Serial.print(", "); Serial.println(blue);
 
   // Create the new color in uint32_t format
-  uint32_t newColor = (newRed << 16) | (newGreen << 8) | newBlue;
+  uint32_t newColor = ((uint32_t)red << 16) | ((uint32_t)green << 8) | blue;
   
   Serial.print("End-Color: ");  Serial.println(newColor);
 
