@@ -240,7 +240,7 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t factor) {
   // Build back the color value
   uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
  
-  Serial.print("Start-Color: ");  Serial.print(nextColor);  Serial.print(", Factor: ");  Serial.println(factor);
+  Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Factor: ");  Serial.println(factor);
   
   return nextColor;
 }
