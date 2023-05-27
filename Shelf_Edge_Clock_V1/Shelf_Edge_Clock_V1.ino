@@ -94,15 +94,6 @@ void loop() {
   
   //read the time
   readTheTime();
-  
-  //unsigned long currentTime = millis();
- 
-  // Check if the time delay has expired since the last color update.
-  //if (currentTime - lastColorUpdate >= colorUpdateDelay) {
-    //clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
-    //clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
-    //lastColorUpdate = currentTime;
-  //}
 
   //display the time on the LEDs
   displayTheTime();
