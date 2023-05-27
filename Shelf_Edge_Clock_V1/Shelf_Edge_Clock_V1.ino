@@ -217,7 +217,7 @@ uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* 
   uint8_t newGreen = (green + shiftAmount) % 256;
   uint8_t newBlue = (blue + shiftAmount) % 256;
 
-  Serial.print("End-RGB-Values: ");
+  Serial.print("New-RGB-Values: ");
     Serial.print(newRed);
     Serial.print(", "); Serial.print(newGreen);
     Serial.print(", "); Serial.println(newBlue);
