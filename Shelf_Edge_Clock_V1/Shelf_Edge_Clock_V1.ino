@@ -217,10 +217,11 @@ uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char*
   //uint32_t nextColor = (nextRed << 16) + (nextGreen << 8) + nextBlue;
   
   // Calculate the next color by shifting the hue in a circular manner
-  uint16_t hue = rgbToHue(red, green, blue);   // Convert RGB to HSL and extract the hue
-  hue = (hue + shiftAmount) % 360;             // Shift the hue in a circular manner
-  uint32_t nextColor = hueToRgb(hue);          // Convert back to RGB
+  uint16_t hue = rgbToHue(red, green, blue);               // Convert RGB to HSL and extract the hue
+  hue = (hue + shiftAmount) % 360;                         // Shift the hue in a circular manner
+  uint32_t nextColor = hueToRgb(hue, red, green, blue);    // Convert back to RGB
  
+  Serial.print("current HUE: ");  Serial.println(hue);
   Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
   Serial.println("");
   
@@ -300,12 +301,6 @@ void hueToRgb(float hue, uint8_t& red, uint8_t& green, uint8_t& blue) {
       blue = 255 * q;
       break;
   }
-}
-
-uint32_t hueToRgb(float hue) {
-  uint8_t red, green, blue;
-  hueToRgb(hue, red, green, blue);
-  return (red << 16) | (green << 8) | blue;
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
