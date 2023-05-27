@@ -48,6 +48,13 @@ uint32_t clockMinuteColour = 0x800000; // pure red
 uint32_t clockHourColour = 0x008000;   // pure green
 uint8_t colorModifyFactor = 5;         // Color change factor
 
+// Variable to store the last time the colors were updated
+unsigned long lastColorUpdate = 0;
+// Time delay between color updates in milliseconds
+// Change this value depending on the desired update rate
+const unsigned long colorUpdateDelay = 100;
+
+
 int clockFaceBrightness = 0;
 
 // Declare our NeoPixel objects:
@@ -94,6 +101,15 @@ void loop() {
   
   //read the time
   readTheTime();
+  
+  unsigned long currentTime = millis();
+ 
+  // Check if the time delay has expired since the last color update.
+  if (currentTime - lastColorUpdate >= colorUpdateDelay) {
+    clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
+    clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
+    lastColorUpdate = currentTime;
+  }
 
   //display the time on the LEDs
   displayTheTime();
@@ -159,10 +175,6 @@ void readTheTime(){
 void displayTheTime(){
 
   stripClock.clear(); //clear the clock face
- 
-  // create a new color for hours and minutes
-  clockHourColour = generateNextColor(clockHourColour, colorModifyFactor, "Hour");
-  clockMinuteColour = generateNextColor(clockMinuteColour, colorModifyFactor, "Minute");
   
   int firstMinuteDigit = MyDateAndTime.Minute % 10; //work out the value of the first digit and then display it
   displayNumber(firstMinuteDigit, 0, clockMinuteColour);
