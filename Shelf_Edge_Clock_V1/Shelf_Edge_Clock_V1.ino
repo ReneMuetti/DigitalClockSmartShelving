@@ -48,13 +48,6 @@ uint32_t clockMinuteColour = 0x800000; // pure red
 uint32_t clockHourColour = 0x008000;   // pure green
 uint8_t colorModifyFactor = 5;         // Color change factor
 
-// Variable to store the last time the colors were updated
-unsigned long lastColorUpdate = 0;
-// Time delay between color updates in milliseconds
-// Change this value depending on the desired update rate
-const unsigned long colorUpdateDelay = 100;
-
-
 int clockFaceBrightness = 0;
 
 // Declare our NeoPixel objects:
@@ -223,7 +216,7 @@ uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* 
   uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
   uint8_t blue = inputColor & 0xFF;           // Extract the blue value
 
-  Serial.print("RGB-Values: ");
+  Serial.print("Start-RGB-Values: ");
     Serial.print(red);
     Serial.print(", "); Serial.print(green);
     Serial.print(", "); Serial.println(blue);
@@ -233,125 +226,17 @@ uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* 
   uint8_t newGreen = (green + shiftAmount) % 256;
   uint8_t newBlue = (blue + shiftAmount) % 256;
 
-  Serial.print("RGB-Values: ");
+  Serial.print("End-RGB-Values: ");
     Serial.print(newRed);
     Serial.print(", "); Serial.print(newGreen);
     Serial.print(", "); Serial.println(newBlue);
 
   // Create the new color in uint32_t format
   uint32_t newColor = (newRed << 16) | (newGreen << 8) | newBlue;
+  
+  Serial.print("End-Color: ");  Serial.println(newColor);
 
   return newColor;
-}
-
-/*
-uint32_t generateNextColor(uint32_t inputColor, uint8_t shiftAmount, const char* usingFor) {
-  Serial.println("");
-  Serial.print("Color is using for: ");  Serial.println(usingFor);
-  Serial.print("Start-Color: ");  Serial.print(inputColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
-
-  uint8_t red = (inputColor >> 16) & 0xFF;    // Extract the red value
-  uint8_t green = (inputColor >> 8) & 0xFF;   // Extract the green value
-  uint8_t blue = inputColor & 0xFF;           // Extract the blue value
-  
-  Serial.print("RGB-Values: ");
-    Serial.print(red);
-    Serial.print(", "); Serial.print(green);
-    Serial.print(", "); Serial.println(blue);
-  
-  // Calculate the next color by shifting the hue in a circular manner
-  float hue, saturation, value;
-  rgbToHsv(red, green, blue, hue, saturation, value);   // Convert RGB to HSL and extract the hue
-
-  hue += shiftAmount;        // Shift the hue in a circular manner
-  hue = fmod(hue, 360.0);    // Make sure that the hue stays in the range 0-360
-
-  uint32_t nextColor = hsvToRgb(hue, saturation, value);   // Convert back to RGB
- 
-  Serial.print("current HUE: ");  Serial.println(hue);
-  Serial.print("Next-Color: ");  Serial.print(nextColor);  Serial.print(", Shift: ");  Serial.println(shiftAmount);
-  Serial.println("---------------------------------------");
-  
-  return nextColor;
-}
-*/
-
-// Convert RGB color to HSV hue
-void rgbToHsv(uint8_t red, uint8_t green, uint8_t blue, float& hue, float& saturation, float& value) {
-  float r = red / 255.0;
-  float g = green / 255.0;
-  float b = blue / 255.0;
-
-  float maxVal = max(r, max(g, b));
-  float minVal = min(r, min(g, b));
-
-  value = maxVal;
-
-  if (maxVal == 0) {
-    saturation = 0;
-  } else {
-    saturation = (maxVal - minVal) / maxVal;
-  }
-
-  if (maxVal == minVal) {
-    hue = 0; // Hue for gray tones is 0
-  } else {
-    float delta = maxVal - minVal;
-    if (maxVal == r) {
-      hue = (g - b) / delta;
-    } else if (maxVal == g) {
-      hue = 2 + (b - r) / delta;
-    } else {
-      hue = 4 + (r - g) / delta;
-    }
-
-    hue *= 60; // Scale the hue to the range 0-360
-
-    if (hue < 0) {
-      hue += 360; // Correct negative color tones
-    }
-  }
-}
-
-// Convert HSV hue to RGB color
-uint32_t hsvToRgb(float hue, float saturation, float value) {
-  float c = value * saturation;
-  float x = c * (1 - abs(fmod(hue / 60.0, 2) - 1));
-  float m = value - c;
-
-  float r, g, b;
-
-  if (hue >= 0 && hue < 60) {
-    r = c;
-    g = x;
-    b = 0;
-  } else if (hue >= 60 && hue < 120) {
-    r = x;
-    g = c;
-    b = 0;
-  } else if (hue >= 120 && hue < 180) {
-    r = 0;
-    g = c;
-    b = x;
-  } else if (hue >= 180 && hue < 240) {
-    r = 0;
-    g = x;
-    b = c;
-  } else if (hue >= 240 && hue < 300) {
-    r = x;
-    g = 0;
-    b = c;
-  } else {
-    r = c;
-    g = 0;
-    b = x;
-  }
-
-  uint8_t red = (r + m) * 255;
-  uint8_t green = (g + m) * 255;
-  uint8_t blue = (b + m) * 255;
-
-  return (red << 16) | (green << 8) | blue;
 }
 
 void displayNumber(int digitToDisplay, int offsetBy, uint32_t colourToUse){
