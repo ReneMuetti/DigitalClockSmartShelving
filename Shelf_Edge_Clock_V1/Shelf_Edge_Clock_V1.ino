@@ -135,6 +135,7 @@ void loop() {
 
    //(red * 65536) + (green * 256) + blue ->for 32-bit merged colour value so 16777215 equals white
   stripDownlighter.fill(16777215, 0, LEDDOWNLIGHT_COUNT);
+  stripDownlighter.setBrightness(clockFaceBrightness); // Set brightness value of the LEDs
   stripDownlighter.show();
 
   delay(5000);   //this 5 second delay to slow things down during testing
