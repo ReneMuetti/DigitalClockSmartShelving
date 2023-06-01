@@ -124,7 +124,7 @@ void loop() {
   Serial.println(lightSensorValue);
 
   // Minimum threshold if the numbers of the clock should not be off at night
-  int minimalLightSensorValue = 10;
+  int minimalLightSensorValue = 7;
   //set the brightness based on ambiant light levels
   clockFaceBrightness = map(lightSensorValue,50, 1000, 200, minimalLightSensorValue); 
   stripClock.setBrightness(clockFaceBrightness); // Set brightness value of the LEDs
@@ -216,10 +216,12 @@ uint32_t generateNewColor(uint32_t inputColor, uint8_t shiftAmount, const char* 
   if (red > 0 && blue == 0) {
     red -= shiftAmount;
     green += shiftAmount;
-  } else if (green > 0 && red == 0) {
+  } 
+  if (green > 0 && red == 0) {
     green -= shiftAmount;
     blue += shiftAmount;
-  } else if (blue > 0 && green == 0) {
+  } 
+  if (blue > 0 && green == 0) {
     red += shiftAmount;
     blue -= shiftAmount;
   }
